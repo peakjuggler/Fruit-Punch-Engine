@@ -79,10 +79,11 @@ class OptionsMenu extends MusicBeatState
 
 	private var currentDescription:String = "";
 	private var grpControls:FlxTypedGroup<Alphabet>;
-	public static var versionShit:FlxText;
+	public static var descriptionText:FlxText;
 
 	var currentSelectedCat:OptionCategory;
 	var blackBorder:FlxSprite;
+	var categoryText:FlxText;
 
 	var optionTitle:FlxSprite;
 	var black:FlxSprite;
@@ -91,7 +92,7 @@ class OptionsMenu extends MusicBeatState
 		instance = this;
 		var menuBG:FlxSprite = new FlxSprite().loadGraphic(Paths.image("menuDesat"));
 
-		menuBG.color = 0xFFea71fd;
+		menuBG.color = 0xFF86b5bf;
 		menuBG.setGraphicSize(Std.int(menuBG.width * 1.1));
 		menuBG.updateHitbox();
 		menuBG.screenCenter();
@@ -124,12 +125,18 @@ class OptionsMenu extends MusicBeatState
 
 		currentDescription = "none";
 
-		versionShit = new FlxText(5, FlxG.height + 40, 0, "Offset (Left, Right, Shift for slow): " + HelperFunctions.truncateFloat(FlxG.save.data.offset,2) + " - Description - " + currentDescription, 12);
-		versionShit.scrollFactor.set();
-		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		
-		blackBorder = new FlxSprite(-30,FlxG.height + 40).makeGraphic((Std.int(versionShit.width + 900)),Std.int(versionShit.height + 600),FlxColor.BLACK);
-		blackBorder.alpha = 0.5;
+		categoryText = new FlxText(50, 640, 1180, "Please select a category.", 32);
+		categoryText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		categoryText.scrollFactor.set();
+		categoryText.borderSize = 2.4;
+		add(categoryText);
+
+		descriptionText = new FlxText(FlxG.width - 460, 10, 450, currentDescription, 12);
+		descriptionText.setFormat("VCR OSD Mono", 24, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		descriptionText.borderSize = 2;
+		descriptionText.scrollFactor.set();
+		//blackBorder = new FlxSprite(-30,FlxG.height + 40).makeGraphic((Std.int(descriptionText.width + 900)),Std.int(descriptionText.height + 600),FlxColor.BLACK);
+		//blackBorder.alpha = 0.5;
 
 		black = new FlxSprite(-700).loadGraphic(Paths.image('blackFade'));
 		black.scrollFactor.x = 0;
@@ -139,12 +146,8 @@ class OptionsMenu extends MusicBeatState
 		//black.screenCenter();
 		black.antialiasing = true;
 
-		add(blackBorder);
-
-		add(versionShit);
-
-		FlxTween.tween(versionShit,{y: FlxG.height - 18},2,{ease: FlxEase.elasticInOut});
-		FlxTween.tween(blackBorder,{y: FlxG.height - 18},2, {ease: FlxEase.elasticInOut});
+		//FlxTween.tween(descriptionText,{y: FlxG.height - 18},2,{ease: FlxEase.elasticInOut});
+		//FlxTween.tween(blackBorder,{y: FlxG.height - 18},2, {ease: FlxEase.elasticInOut});
 
 		super.create();
 	}
@@ -163,6 +166,8 @@ class OptionsMenu extends MusicBeatState
 			else if (controls.BACK)
 			{
 				isCat = false;
+				add(categoryText);
+				remove(descriptionText);
 				FlxTween.tween(black,{x: -700}, 0.5, {ease: FlxEase.expoInOut});
 				new FlxTimer().start(0.5, function(tmr:FlxTimer)
 				{
@@ -243,12 +248,12 @@ class OptionsMenu extends MusicBeatState
 					else if (FlxG.keys.pressed.LEFT)
 						FlxG.save.data.offset -= 0.1;
 					
-					versionShit.text = "Offset (Left, Right, Shift for slow): " + HelperFunctions.truncateFloat(FlxG.save.data.offset,2) + " - Description - " + currentDescription;
+					descriptionText.text = currentDescription;
 				}
 				if (currentSelectedCat.getOptions()[curSelected].getAccept())
-					versionShit.text =  currentSelectedCat.getOptions()[curSelected].getValue() + " - Description - " + currentDescription;
+					descriptionText.text = currentDescription;
 				else
-					versionShit.text = "Offset (Left, Right, Shift for slow): " + HelperFunctions.truncateFloat(FlxG.save.data.offset,2) + " - Description - " + currentDescription;
+					descriptionText.text = currentDescription;
 			}
 			else
 			{
@@ -264,7 +269,7 @@ class OptionsMenu extends MusicBeatState
 				else if (FlxG.keys.pressed.LEFT)
 					FlxG.save.data.offset -= 0.1;
 				
-				versionShit.text = "Offset (Left, Right, Shift for slow): " + HelperFunctions.truncateFloat(FlxG.save.data.offset,2) + " - Description - " + currentDescription;
+				descriptionText.text = currentDescription;
 			}
 		
 
@@ -286,6 +291,8 @@ class OptionsMenu extends MusicBeatState
 					isCat = true;
 					grpControls.clear();
 					add(black);
+					remove(categoryText);
+					add(descriptionText);
 					FlxTween.tween(optionTitle,{y: -300}, 0.5, {ease: FlxEase.expoInOut});
 					new FlxTimer().start(0.5, function(tmr:FlxTimer)
 					{
@@ -333,12 +340,12 @@ class OptionsMenu extends MusicBeatState
 		if (isCat)
 		{
 			if (currentSelectedCat.getOptions()[curSelected].getAccept())
-				versionShit.text =  currentSelectedCat.getOptions()[curSelected].getValue() + " - Description - " + currentDescription;
+				descriptionText.text =  currentSelectedCat.getOptions()[curSelected].getValue() + " - Description - " + currentDescription;
 			else
-				versionShit.text = "Offset (Left, Right, Shift for slow): " + HelperFunctions.truncateFloat(FlxG.save.data.offset,2) + " - Description - " + currentDescription;
+				descriptionText.text = currentDescription;
 		}
 		else
-			versionShit.text = "Offset (Left, Right, Shift for slow): " + HelperFunctions.truncateFloat(FlxG.save.data.offset,2) + " - Description - " + currentDescription;
+			descriptionText.text = currentDescription;
 		// selector.y = (70 * curSelected) + 30;
 
 		var bullShit:Int = 0;
