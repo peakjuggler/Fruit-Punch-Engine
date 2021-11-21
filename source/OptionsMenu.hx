@@ -8,6 +8,7 @@ import Options;
 import Controls.Control;
 import flash.text.TextField;
 import flixel.FlxG;
+import flixel.util.FlxTimer;
 import flixel.FlxSprite;
 import flixel.addons.display.FlxGridOverlay;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -60,7 +61,7 @@ class OptionsMenu extends MusicBeatState
 			new AccuracyOption("Display accuracy information."),
 			new SongPositionOption("Show the songs current position (as a bar)"),
 		]),
-		new OptionCategory("Misc", [
+		new OptionCategory("Miscellaneous", [
 			#if desktop
 			new FPSOption("Toggle the FPS Counter"),
 			new ReplayOption("View replays"),
@@ -82,6 +83,9 @@ class OptionsMenu extends MusicBeatState
 
 	var currentSelectedCat:OptionCategory;
 	var blackBorder:FlxSprite;
+
+	var optionTitle:FlxSprite;
+	var black:FlxSprite;
 	override function create()
 	{
 		instance = this;
@@ -94,13 +98,25 @@ class OptionsMenu extends MusicBeatState
 		menuBG.antialiasing = true;
 		add(menuBG);
 
+		optionTitle = new FlxSprite(0, 55);
+		optionTitle.frames = Paths.getSparrowAtlas('FNF_main_menu_assets');
+		optionTitle.animation.addByPrefix('selected', "options white", 24);
+		optionTitle.animation.play('selected');
+		optionTitle.scrollFactor.set();
+		optionTitle.antialiasing = true;
+		optionTitle.updateHitbox();
+		optionTitle.screenCenter(X);
+		//thanks rozebud
+		add(optionTitle);
+
 		grpControls = new FlxTypedGroup<Alphabet>();
-		add(grpControls);
+		add(grpControls); //test thing
 
 		for (i in 0...options.length)
 		{
 			var controlLabel:Alphabet = new Alphabet(0, (70 * i) + 30, options[i].getName(), true, false, true);
-			controlLabel.isMenuItem = true;
+			controlLabel.screenCenter(X);
+			controlLabel.isCategoryOption = true;
 			controlLabel.targetY = i;
 			grpControls.add(controlLabel);
 			// DONT PUT X IN THE FIRST PARAMETER OF new ALPHABET() !!
@@ -114,6 +130,14 @@ class OptionsMenu extends MusicBeatState
 		
 		blackBorder = new FlxSprite(-30,FlxG.height + 40).makeGraphic((Std.int(versionShit.width + 900)),Std.int(versionShit.height + 600),FlxColor.BLACK);
 		blackBorder.alpha = 0.5;
+
+		black = new FlxSprite(-700).loadGraphic(Paths.image('blackFade'));
+		black.scrollFactor.x = 0;
+		black.scrollFactor.y = 0;
+		black.setGraphicSize(Std.int(black.width * 1.1));
+		black.updateHitbox();
+		//black.screenCenter();
+		black.antialiasing = true;
 
 		add(blackBorder);
 
@@ -139,11 +163,22 @@ class OptionsMenu extends MusicBeatState
 			else if (controls.BACK)
 			{
 				isCat = false;
+				FlxTween.tween(black,{x: -700}, 0.5, {ease: FlxEase.expoInOut});
+				new FlxTimer().start(0.5, function(tmr:FlxTimer)
+				{
+					remove(black);
+				});
+				new FlxTimer().start(0.25, function(tmr:FlxTimer)
+				{
+					add(optionTitle);
+					FlxTween.tween(optionTitle,{y: 55}, 0.5, {ease: FlxEase.expoInOut});
+				});
 				grpControls.clear();
 				for (i in 0...options.length)
 				{
-					var controlLabel:Alphabet = new Alphabet(0, (70 * i) + 30, options[i].getName(), true, false);
-					controlLabel.isMenuItem = true;
+					var controlLabel:Alphabet = new Alphabet(0, (70 * i) - 30, options[i].getName(), true, false);
+					controlLabel.isCategoryOption = true;
+					controlLabel.screenCenter(X);
 					controlLabel.targetY = i;
 					grpControls.add(controlLabel);
 					// DONT PUT X IN THE FIRST PARAMETER OF new ALPHABET() !!
@@ -250,14 +285,21 @@ class OptionsMenu extends MusicBeatState
 					currentSelectedCat = options[curSelected];
 					isCat = true;
 					grpControls.clear();
+					add(black);
+					FlxTween.tween(optionTitle,{y: -300}, 0.5, {ease: FlxEase.expoInOut});
+					new FlxTimer().start(0.5, function(tmr:FlxTimer)
+					{
+						remove(optionTitle);
+					});
 					for (i in 0...currentSelectedCat.getOptions().length)
 						{
 							var controlLabel:Alphabet = new Alphabet(0, (70 * i) + 30, currentSelectedCat.getOptions()[i].getDisplay(), true, false);
-							controlLabel.isMenuItem = true;
+							controlLabel.isOption = true;
 							controlLabel.targetY = i;
 							grpControls.add(controlLabel);
 							// DONT PUT X IN THE FIRST PARAMETER OF new ALPHABET() !!
 						}
+					FlxTween.tween(black,{x: -100}, 0.5, {ease: FlxEase.expoInOut});
 					curSelected = 0;
 				}
 				
