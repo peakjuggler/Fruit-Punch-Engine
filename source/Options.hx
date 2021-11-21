@@ -161,6 +161,27 @@ class GhostTapOption extends Option
 	}
 }
 
+class NoteSplashes extends Option
+{
+	public function new(desc:String)
+		{
+			super();
+			description = desc;
+		}
+	
+		public override function press():Bool
+		{
+			FlxG.save.data.NoteSplashes = !FlxG.save.data.NoteSplashes;
+			display = updateDisplay();
+			return true;
+		}
+	
+		private override function updateDisplay():String
+		{
+			return "NoteSplashes " + (FlxG.save.data.NoteSplashes ? "ON" : "OFF");
+		}
+}
+
 class AccuracyOption extends Option
 {
 	public function new(desc:String)
