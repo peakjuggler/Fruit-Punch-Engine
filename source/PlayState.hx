@@ -267,8 +267,8 @@ class PlayState extends MusicBeatState
 		PlayStateChangeables.safeFrames = FlxG.save.data.frames;
 		PlayStateChangeables.scrollSpeed = FlxG.save.data.scrollSpeed;
 		PlayStateChangeables.botPlay = FlxG.save.data.botplay;
-		PlayStateChangeables.Optimize = FlxG.save.data.optimize;
-		PlayStateChangeables.NoteSplashes = FlxG.save.data.NoteSplashes;
+		PlayStateChangeables.optimizeGameplay = FlxG.save.data.optimize;
+		PlayStateChangeables.noteSplashes = FlxG.save.data.NoteSplashes;
 
 		// pre lowercasing the song name (create)
 		var songLowercase = StringTools.replace(PlayState.SONG.song, " ", "-").toLowerCase();
@@ -282,7 +282,7 @@ class PlayState extends MusicBeatState
 		#if windows
 		executeModchart = FileSystem.exists(Paths.lua(songLowercase  + "/modchart"));
 		if (executeModchart)
-			PlayStateChangeables.Optimize = false;
+			PlayStateChangeables.optimizeGameplay = false;
 		#end
 		#if !cpp
 		executeModchart = false; // FORCE disable for non cpp targets
@@ -389,7 +389,7 @@ class PlayState extends MusicBeatState
 			}
 		} else {stageCheck = SONG.stage;}
 
-		if (!PlayStateChangeables.Optimize)
+		if (!PlayStateChangeables.optimizeGameplay)
 		{
 
 		switch(stageCheck)
@@ -885,7 +885,7 @@ class PlayState extends MusicBeatState
 				gf.y += 300;
 		}
 
-		if (!PlayStateChangeables.Optimize)
+		if (!PlayStateChangeables.optimizeGameplay)
 		{
 			add(gf);
 
@@ -943,7 +943,7 @@ class PlayState extends MusicBeatState
 		laneunderlay.scrollFactor.set();
 		laneunderlay.screenCenter(Y);
 
-		if (FlxG.save.data.laneUnderlay && !PlayStateChangeables.Optimize)
+		if (FlxG.save.data.laneUnderlay && !PlayStateChangeables.optimizeGameplay)
 		{
 			add(laneunderlayOpponent);
 			add(laneunderlay);
@@ -1632,7 +1632,7 @@ class PlayState extends MusicBeatState
 
 				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote);
 
-				if (!gottaHitNote && PlayStateChangeables.Optimize)
+				if (!gottaHitNote && PlayStateChangeables.optimizeGameplay)
 					continue;
 
 				swagNote.sustainLength = songNotes[2];
@@ -1695,7 +1695,7 @@ class PlayState extends MusicBeatState
 			//defaults if no noteStyle was found in chart
 			var noteTypeCheck:String = 'normal';
 		
-			if (PlayStateChangeables.Optimize && player == 0)
+			if (PlayStateChangeables.optimizeGameplay && player == 0)
 				continue;
 
 			if (SONG.noteStyle == null) {
@@ -1833,7 +1833,7 @@ class PlayState extends MusicBeatState
 			babyArrow.x += 100;
 			babyArrow.x += ((FlxG.width / 2) * player);
 			
-			if (PlayStateChangeables.Optimize || (FlxG.save.data.middleScroll && !executeModchart))
+			if (PlayStateChangeables.optimizeGameplay || (FlxG.save.data.middleScroll && !executeModchart))
 				babyArrow.x -= 325;
 			
 			cpuStrums.forEach(function(spr:FlxSprite)
@@ -2026,7 +2026,7 @@ class PlayState extends MusicBeatState
 		switch (curStage)
 		{
 			case 'philly':
-				if (trainMoving && !PlayStateChangeables.Optimize)
+				if (trainMoving && !PlayStateChangeables.optimizeGameplay)
 				{
 					trainFrameTiming += elapsed;
 
@@ -2921,7 +2921,7 @@ class PlayState extends MusicBeatState
 				sploosh.animation.addByPrefix('splash 1 1', 'note impact 2 blue', 24, false);
 				sploosh.animation.addByPrefix('splash 1 2', 'note impact 2 green', 24, false);
 				sploosh.animation.addByPrefix('splash 1 3', 'note impact 2 red', 24, false);
-				if (daRating == 'sick' && PlayStateChangeables.NoteSplashes)
+				if (daRating == 'sick' && PlayStateChangeables.noteSplashes)
 				{
 					add(sploosh);
 					sploosh.cameras = [camHUD];
