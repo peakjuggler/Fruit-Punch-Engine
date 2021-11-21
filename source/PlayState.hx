@@ -1930,8 +1930,6 @@ class PlayState extends MusicBeatState
 		perfectMode = false;
 		#end
 
-		FlxG.camera.followLerp = elapsed * 2;
-
 		if (PlayStateChangeables.botPlay && FlxG.keys.justPressed.ONE)
 			camHUD.visible = !camHUD.visible;
 
@@ -3189,27 +3187,6 @@ class PlayState extends MusicBeatState
 			curSection += 1;
 			}
 		}
-
-		private function strumCameraRoll(cStrum:FlxTypedGroup<UIStaticArrow>, mustHit:Bool)
-			{
-				if (!Init.trueSettings.get('No Camera Note Movement'))
-				{
-					var camDisplaceExtend:Float = 1.5;
-					var camDisplaceSpeed = 0.0125;
-					if (PlayState.SONG.notes[Std.int(curStep / 16)] != null)
-					{
-						if ((PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection && mustHit)
-							|| (!PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection && !mustHit))
-						{
-							if ((cStrum.members[0].animation.curAnim.name == 'confirm') && (camDisplaceX > -camDisplaceExtend))
-								camDisplaceX -= camDisplaceSpeed;
-							else if ((cStrum.members[3].animation.curAnim.name == 'confirm') && (camDisplaceX < camDisplaceExtend))
-								camDisplaceX += camDisplaceSpeed;
-						}
-					}
-				}
-				//
-			}
 
 	public function NearlyEquals(value1:Float, value2:Float, unimportantDifference:Float = 10):Bool
 		{
