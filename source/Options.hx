@@ -202,6 +202,25 @@ class AccuracyOption extends Option
 	}
 }
 
+class SpaceOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+	public override function press():Bool
+	{
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "";
+	}
+}
+
+
 class ComboBreakOption extends Option
 {
 	public function new(desc:String)

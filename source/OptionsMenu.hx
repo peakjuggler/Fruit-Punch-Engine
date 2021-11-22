@@ -28,48 +28,50 @@ class OptionsMenu extends MusicBeatState
 	var options:Array<OptionCategory> = [
 		new OptionCategory("Gameplay", [
 			new DFJKOption(controls),
-			new DownscrollOption("Change the layout of the strumline."),
-			new GhostTapOption("Ghost Tapping is when you tap a direction and it doesn't give you a miss."),
-			new NoteSplashes("NoteSplashes are animations that play when you get a Sick."),
-			new Judgement("Customize your Hit Timings (LEFT or RIGHT)"),
+			new DownscrollOption("Change if the arrows come from the bottom or the top."),
+			new MiddleScrollOption("Put your lane in the center or on the right."),
+			new GhostTapOption("If enabled, you will not lose health or get a miss when you tap a button."),
+			new Judgement("Customize how many frames you have to hit the note."),
 			#if desktop
-			new FPSCapOption("Cap your FPS"),
+			new FPSCapOption("Change the highest amount of FPS you can have."),
 			#end
-			new ScrollSpeedOption("Change your scroll speed (1 = Chart dependent)"),
-			new AccuracyDOption("Change how accuracy is calculated. (Accurate = Simple, Complex = Milisecond Based)"),
-			new ResetButtonOption("Toggle pressing R to gameover."),
-			// new OffsetMenu("Get a note offset based off of your inputs!"),
-			new CustomizeGameplay("Drag'n'Drop Gameplay Modules around to your preference")
+			new ScrollSpeedOption("Edit your scroll speed value."),
+			new AccuracyDOption("Change how accuracy is calculated. (Accurate = Simple, Complex = Millisecond Based)"),
+			new ResetButtonOption("Toggle pressing R to instantly die."),
+			new CustomizeGameplay("Drag around the ratings to your liking.")
 		]),
 		new OptionCategory("Appearance", [
+			new NoteSplashes("When hitting a SICK!, the note plays an animation."),
 			new DistractionsAndEffectsOption("Toggle stage distractions that can hinder your gameplay."),
+			new Colour("The color of the healthbar now fits with everyone's icons."),
+			new LaneUnderlayOption("Toggles if the notes have a black background behind them for visibility."),
 			new CamZoomOption("Toggle the camera zoom in-game."),
+			new SpaceOption(""),
 			#if desktop
-			new RainbowFPSOption("Make the FPS Counter Rainbow"),
-			new CpuStrums("CPU's strumline lights up when a note hits it."),
+			new RainbowFPSOption("Change the FPS counter to flash rainbow."),
+			new FPSOption("Turn the FPS counter on or off."),
+			new SpaceOption(""),
+			new CpuStrums("The CPU's strumline lights up when a note hits it, like Boyfriend's strumline."),
 			#end
-			new LaneUnderlayOption("Toggles lane underlay"),
-			new MiddleScrollOption("Put your lane in the center or on the right."),
-			new HealthBarOption("Toggle the health bar."),
-			new Colour("The color behind icons now fit with their theme. (e.g. Pico = green)"),
-			new ScoreTextOption("Lol sexo"),
+			new ScoreScreen("Show a list of all your stats at the end of a song/week."),
+			new ShowInput("Display every single input in the score screen."),
 		]),
 		new OptionCategory("UI and Interface", [
-			new NPSDisplayOption("Shows your current Notes Per Second."),
+			new HealthBarOption("Toggle the health bar."),
+			new ScoreTextOption("Toggle the score text."),
+			new SongPositionOption("Toggle showing how far you are in the song."),
+			new SpaceOption(""),
+			new NPSDisplayOption("Display the amount of notes per second."),
 			new ComboBreakOption("Display the amount of combo breaks."),
-			new ScoreOption("Display score text"),
+			new ScoreOption("Display score information."),
 			new AccuracyOption("Display accuracy information."),
-			new SongPositionOption("Show the songs current position (as a bar)"),
 		]),
 		new OptionCategory("Miscellaneous", [
 			#if desktop
-			new FPSOption("Toggle the FPS Counter"),
 			new ReplayOption("View replays"),
 			#end
 			new FlashingLightsOption("Toggle flashing lights that can cause epileptic seizures and strain."),
-			new ScoreScreen("Show the score screen after the end of a song"),
-			new ShowInput("Display every single input in the score screen."),
-			new Optimization("No backgrounds, no characters, centered notes, no player 2."),
+			new Optimization("Removes everything except your notes and UI. Great for poor computers that cannot handle effects."),
 			new BotPlay("Showcase your charts and mods with autoplay."),
 		])
 		
