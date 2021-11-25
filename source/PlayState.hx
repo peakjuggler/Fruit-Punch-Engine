@@ -103,6 +103,9 @@ class PlayState extends MusicBeatState
 	var halloweenLevel:Bool = false;
 
 	var songLength:Float = 0;
+
+	var songText:FlxText;
+	var engineWatermark:FlxText;
 	
 	#if windows
 	// Discord RPC variables
@@ -1039,6 +1042,16 @@ class PlayState extends MusicBeatState
 		botplayTxt.alpha = 0.47;
 		if(PlayStateChangeables.botPlay && !loadRep) add(botplayTxt);
 
+		songText = new FlxText(4,healthBarBG.y + 50,0,SONG.song + " | " + CoolUtil.difficultyFromInt(storyDifficulty), 16);
+		songText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
+		songText.scrollFactor.set();
+		if(FlxG.save.data.watermark) add(songText);
+
+		engineWatermark = new FlxText(FlxG.width - 200, healthBarBG.y + 50,0,"Engine Failure v" + MainMenuState.engineVersion, 16);
+		engineWatermark.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
+		engineWatermark.scrollFactor.set();
+		if(FlxG.save.data.watermark) add(engineWatermark);
+
 		if (FlxG.save.data.songPosition) // I dont wanna talk about this code :(
 		{
 			add(songPosBG);
@@ -1068,6 +1081,8 @@ class PlayState extends MusicBeatState
 		iconP2.cameras = [camHUD];
 		scoreTxt.cameras = [camHUD];
 		doof.cameras = [camHUD];
+		engineWatermark.cameras = [camHUD];
+        songText.cameras = [camHUD];
 		if (FlxG.save.data.songPosition)
 		{
 			songPosBG.cameras = [camHUD];

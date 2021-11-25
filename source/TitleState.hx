@@ -168,6 +168,7 @@ class TitleState extends MusicBeatState
 		// bg.setGraphicSize(Std.int(bg.width * 0.6));
 		// bg.updateHitbox();
 		add(bg);
+
 		logoBl = new FlxSprite(-150, -100);
 		logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
 		logoBl.antialiasing = true;

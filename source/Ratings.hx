@@ -9,35 +9,34 @@ class Ratings
 			ranking = "BotPlay";
 
         if (PlayState.misses == 0 && PlayState.bads == 0 && PlayState.shits == 0 && PlayState.goods == 0) // Marvelous (SICK) Full Combo
-            ranking = "(MFC)";
+            ranking = "[SFC]";
         else if (PlayState.misses == 0 && PlayState.bads == 0 && PlayState.shits == 0 && PlayState.goods >= 1) // Good Full Combo (Nothing but Goods & Sicks)
-            ranking = "(GFC)";
+            ranking = "[GFC]";
         else if (PlayState.misses == 0) // Regular FC
-            ranking = "(FC)";
+            ranking = "[FC]";
         else if (PlayState.misses < 10) // Single Digit Combo Breaks
-            ranking = "(SDCB)";
+            ranking = "[SDCB]";
         else
-            ranking = "(Clear)";
-
-        // WIFE TIME :)))) (based on Wife3)
+            ranking = "";
 
         var wifeConditions:Array<Bool> = [
-            accuracy >= 99.9935, // AAAAA
-            accuracy >= 99.980, // AAAA:
-            accuracy >= 99.970, // AAAA.
-            accuracy >= 99.955, // AAAA
-            accuracy >= 99.90, // AAA:
-            accuracy >= 99.80, // AAA.
-            accuracy >= 99.70, // AAA
-            accuracy >= 99, // AA:
-            accuracy >= 96.50, // AA.
-            accuracy >= 93, // AA
-            accuracy >= 90, // A:
-            accuracy >= 85, // A.
-            accuracy >= 80, // A
-            accuracy >= 70, // B
-            accuracy >= 60, // C
-            accuracy < 60 // D
+            accuracy >= 99.5, // S++
+            accuracy >= 99, // S+
+            accuracy >= 97.34, // S
+            accuracy >= 95.68, // S-
+            accuracy >= 94.02, // A+
+            accuracy >= 92.36, // A
+            accuracy >= 90, // A-
+            accuracy >= 88, // B+
+            accuracy >= 85, // B
+            accuracy >= 80, // B-
+            accuracy >= 78, // C+
+            accuracy >= 75, // C
+            accuracy >= 70, // C-
+            accuracy >= 68, // D+
+            accuracy >= 65, // D
+            accuracy >= 60, // D-
+            accuracy < 60 // F
         ];
 
         for(i in 0...wifeConditions.length)
@@ -48,37 +47,39 @@ class Ratings
                 switch(i)
                 {
                     case 0:
-                        ranking += " AAAAA";
+                        ranking += " S++";
                     case 1:
-                        ranking += " AAAA:";
+                        ranking += " S+";
                     case 2:
-                        ranking += " AAAA.";
+                        ranking += " S";
                     case 3:
-                        ranking += " AAAA";
+                        ranking += " S-";
                     case 4:
-                        ranking += " AAA:";
+                        ranking += " A+";
                     case 5:
-                        ranking += " AAA.";
-                    case 6:
-                        ranking += " AAA";
-                    case 7:
-                        ranking += " AA:";
-                    case 8:
-                        ranking += " AA.";
-                    case 9:
-                        ranking += " AA";
-                    case 10:
-                        ranking += " A:";
-                    case 11:
-                        ranking += " A.";
-                    case 12:
                         ranking += " A";
-                    case 13:
+                    case 6:
+                        ranking += " A-";
+                    case 7:
+                        ranking += " B+";
+                    case 8:
                         ranking += " B";
-                    case 14:
+                    case 9:
+                        ranking += " B-";
+                    case 10:
+                        ranking += " C+";
+                    case 11:
                         ranking += " C";
-                    case 15:
+                    case 12:
+                        ranking += " C-";
+                    case 13:
+                        ranking += " D+";
+                    case 14:
                         ranking += " D";
+                    case 15:
+                        ranking += " D-";
+                    case 16:
+                        ranking += " F";
                 }
                 break;
             }
@@ -146,6 +147,6 @@ class Ratings
          (((FlxG.save.data.missDisplay || FlxG.save.data.accuracyDisplay) && FlxG.save.data.scoreDisplay) ? " | " : "") +
          (FlxG.save.data.missDisplay ? "Combo Breaks:" + PlayState.misses + "" : "") +
          ((FlxG.save.data.accuracyDisplay && FlxG.save.data.missDisplay) ? " | " : "") +
-         (FlxG.save.data.accuracyDisplay ? "Accuracy:" + (PlayStateChangeables.botPlay && !PlayState.loadRep ? "N/A" : HelperFunctions.truncateFloat(accuracy, 2) + " %") + " | " + GenerateLetterRank(accuracy) : "");
+         (FlxG.save.data.accuracyDisplay ? "Accuracy:" + (PlayStateChangeables.botPlay && !PlayState.loadRep ? "N/A" : HelperFunctions.truncateFloat(accuracy, 2) + "%") + " | " + GenerateLetterRank(accuracy) : "");
     }
 }

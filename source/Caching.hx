@@ -26,8 +26,9 @@ class Caching extends MusicBeatState
     var toBeDone = 0;
     var done = 0;
 
+    var bg:FlxSprite;
     var text:FlxText;
-    var kadeLogo:FlxSprite;
+    var logoBl:FlxSprite;
 
 	override function create()
 	{
@@ -39,21 +40,32 @@ class Caching extends MusicBeatState
 
         FlxG.worldBounds.set(0,0);
 
-        text = new FlxText(FlxG.width / 2, FlxG.height / 2 + 300,0,"Loading...");
-        text.size = 34;
-        text.alignment = FlxTextAlign.CENTER;
+        text = new FlxText(50, 640, 1180, "Loading...", 32);
+		text.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		text.scrollFactor.set();
+		text.borderSize = 2.4;
         text.alpha = 0;
 
-        kadeLogo = new FlxSprite(FlxG.width / 2, FlxG.height / 2).loadGraphic(Paths.image('KadeEngineLogo'));
-        kadeLogo.x -= kadeLogo.width / 2;
-        kadeLogo.y -= kadeLogo.height / 2 + 100;
-        text.y -= kadeLogo.height / 2 - 125;
-        text.x -= 170;
-        kadeLogo.setGraphicSize(Std.int(kadeLogo.width * 0.6));
+        bg = new FlxSprite(-100).loadGraphic(Paths.image('menuDesat'));
+        bg.setGraphicSize(Std.int(bg.width * 1.1));
+		bg.scrollFactor.set();
+		bg.updateHitbox();
+		bg.screenCenter();
+		bg.antialiasing = true;
+        bg.alpha = 0.4;
 
-        kadeLogo.alpha = 0;
+        logoBl = new FlxSprite(0, -100);
+		logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
+        logoBl.setGraphicSize(Std.int(logoBl.width * 1.3));
+		logoBl.antialiasing = true;
+        //logoBl.screenCenter(X);
+		logoBl.animation.addByPrefix('bump', 'logo bumpin', 24, false);
+		logoBl.updateHitbox();
 
-        add(kadeLogo);
+        logoBl.alpha = 0;
+
+        add(bg);
+        add(logoBl);
         add(text);
 
         trace('starting caching..');
@@ -74,14 +86,13 @@ class Caching extends MusicBeatState
         if (toBeDone != 0 && done != toBeDone)
         {
             var alpha = HelperFunctions.truncateFloat(done / toBeDone * 100,2) / 100;
-            kadeLogo.alpha = alpha;
+            logoBl.alpha = alpha;
             text.alpha = alpha;
             text.text = "Loading... (" + done + "/" + toBeDone + ")";
         }
 
         super.update(elapsed);
     }
-
 
     function cache()
     {

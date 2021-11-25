@@ -59,6 +59,7 @@ class OptionsMenu extends MusicBeatState
 		new OptionCategory("UI and Interface", [
 			new HealthBarOption("Toggle the health bar."),
 			new ScoreTextOption("Toggle the score text."),
+			new WatermarkOption("Toggle the watermarks in certain places."),
 			new SongPositionOption("Toggle showing how far you are in the song."),
 			new SpaceOption(""),
 			new NPSDisplayOption("Display the amount of notes per second."),

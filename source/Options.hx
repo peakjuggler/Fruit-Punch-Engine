@@ -161,6 +161,27 @@ class GhostTapOption extends Option
 	}
 }
 
+class WatermarkOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.watermark = !FlxG.save.data.watermark;
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return FlxG.save.data.watermark ? "Watermarks On" : "Watermarks Off";
+	}
+}
+
 class NoteSplashes extends Option
 {
 	public function new(desc:String)
@@ -300,7 +321,7 @@ class LaneUnderlayOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return (FlxG.save.data.laneUnderlay ? "Lane underlay" : "No lane underlay");
+		return (FlxG.save.data.laneUnderlay ? "Lane underlay " + FlxG.save.data.laneTransparency : "No lane underlay");
 	}
 
 	override function right():Bool
@@ -329,7 +350,6 @@ class LaneUnderlayOption extends Option
 
 		if (FlxG.save.data.laneTransparency > 1)
 			FlxG.save.data.laneTransparency = 1;
-
 		return true;
 	}
 }

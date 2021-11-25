@@ -10,6 +10,8 @@ import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import lime.utils.Assets;
+import flixel.effects.FlxFlicker;
+import flixel.tweens.FlxTween;
 
 
 #if windows
@@ -252,7 +254,25 @@ class FreeplayState extends MusicBeatState
 			PlayState.storyDifficulty = curDifficulty;
 			PlayState.storyWeek = songs[curSelected].week;
 			trace('CUR WEEK' + PlayState.storyWeek);
-			LoadingState.loadAndSwitchState(new PlayState());
+
+			//all this code is from betadciu go sub to blantados
+			var theSongWordLength = FlxG.sound.play(Paths.sound('confirmMenu')).length;
+			grpSongs.forEach(function(wordThingy:Alphabet){
+				if (wordThingy.text != songs[curSelected].songName){
+					FlxTween.tween(wordThingy, {x: -6000}, theSongWordLength / 1000,{onComplete:function(e:FlxTween){
+					
+						if (FlxG.keys.pressed.ALT){
+							FlxG.switchState(new ChartingState());
+						}else{
+							LoadingState.loadAndSwitchState(new PlayState());
+						}
+					}});
+				}else{
+					FlxFlicker.flicker(wordThingy);
+					trace(curSelected);
+					FlxTween.tween(wordThingy, {x: wordThingy.x + 20}, theSongWordLength/1000);
+				}	
+			});
 		}
 	}
 
