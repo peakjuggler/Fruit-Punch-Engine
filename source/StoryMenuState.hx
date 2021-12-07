@@ -99,16 +99,16 @@ class StoryMenuState extends MusicBeatState
 		add(grpWeekText);
 
 		var blackBarThingie:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, 56, FlxColor.BLACK);
-		add(blackBarThingie);
 
 		grpWeekText = new FlxTypedGroup<MenuItem>();
 		grpWeekCharacters = new FlxTypedGroup<MenuCharacter>();
 		grpLocks = new FlxTypedGroup<FlxSprite>();
 
-		add(grpWeekCharacters);
-		add(yellowBG);
 		add(grpWeekText);
 		add(grpLocks);
+		add(blackBarThingie);
+		add(yellowBG);
+		add(grpWeekCharacters);
 
 		grpWeekCharacters.add(new MenuCharacter(0, 100, 0.5, false));
 		grpWeekCharacters.add(new MenuCharacter(450, 25, 0.9, true));
