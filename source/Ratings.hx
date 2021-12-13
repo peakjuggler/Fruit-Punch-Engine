@@ -9,13 +9,13 @@ class Ratings
 			ranking = "BotPlay";
 
         if (PlayState.misses == 0 && PlayState.bads == 0 && PlayState.shits == 0 && PlayState.goods == 0) // Marvelous (SICK) Full Combo
-            ranking = "[SFC]";
+            ranking = "[SFC] ";
         else if (PlayState.misses == 0 && PlayState.bads == 0 && PlayState.shits == 0 && PlayState.goods >= 1) // Good Full Combo (Nothing but Goods & Sicks)
-            ranking = "[GFC]";
+            ranking = "[GFC] ";
         else if (PlayState.misses == 0) // Regular FC
-            ranking = "[FC]";
+            ranking = "[FC] ";
         else if (PlayState.misses < 10) // Single Digit Combo Breaks
-            ranking = "[SDCB]";
+            ranking = "[SDCB] ";
         else
             ranking = "";
 
@@ -47,39 +47,39 @@ class Ratings
                 switch(i)
                 {
                     case 0:
-                        ranking += " SSS";
+                        ranking += "SS";
                     case 1:
-                        ranking += " SS";
+                        ranking += "S+";
                     case 2:
-                        ranking += " S";
+                        ranking += "S";
                     case 3:
-                        ranking += " S-";
+                        ranking += "S-";
                     case 4:
-                        ranking += " A+";
+                        ranking += "A+";
                     case 5:
-                        ranking += " A";
+                        ranking += "A";
                     case 6:
-                        ranking += " A-";
+                        ranking += "A-";
                     case 7:
-                        ranking += " B+";
+                        ranking += "B+";
                     case 8:
-                        ranking += " B";
+                        ranking += "B";
                     case 9:
-                        ranking += " B-";
+                        ranking += "B-";
                     case 10:
-                        ranking += " C+";
+                        ranking += "C+";
                     case 11:
-                        ranking += " C";
+                        ranking += "C";
                     case 12:
-                        ranking += " C-";
+                        ranking += "C-";
                     case 13:
-                        ranking += " D+";
+                        ranking += "D+";
                     case 14:
-                        ranking += " D";
+                        ranking += "D";
                     case 15:
-                        ranking += " D-";
+                        ranking += "D-";
                     case 16:
-                        ranking += " E";
+                        ranking += "E";
                 }
                 break;
             }
@@ -138,11 +138,9 @@ class Ratings
         return rating;
     }
 
-    public static function CalculateRanking(score:Int,scoreDef:Int,nps:Int,maxNPS:Int,accuracy:Float):String
+    public static function CalculateRanking(score:Int,scoreDef:Int,accuracy:Float):String
     {
         return
-         (FlxG.save.data.npsDisplay ? "NPS: " + nps + " (Max " + maxNPS + ")" : "") + 
-         (((FlxG.save.data.scoreDisplay || FlxG.save.data.missDisplay || FlxG.save.data.accuracyDisplay) && FlxG.save.data.npsDisplay) ? " | " : "") +
          (FlxG.save.data.scoreDisplay ? "Score:" + (Conductor.safeFrames != 10 ? score + " (" + scoreDef + ")" : " " + score + "") : "") +
          (((FlxG.save.data.missDisplay || FlxG.save.data.accuracyDisplay) && FlxG.save.data.scoreDisplay) ? " | " : "") +
          (FlxG.save.data.missDisplay ? "Misses:" + PlayState.misses + "" : "") +

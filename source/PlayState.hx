@@ -997,12 +997,12 @@ class PlayState extends MusicBeatState
 		songPosBG.screenCenter(X);
 
 		songPosBar = new FlxBar(songPosBG.x + 4, songPosBG.y + 4, LEFT_TO_RIGHT, Std.int(songPosBG.width - 8), Std.int(songPosBG.height - 8), this, 'songPositionBar', 0, 90000);
-		songPosBar.createFilledBar(FlxColor.GRAY, FlxColor.LIME);
+		songPosBar.createFilledBar(FlxColor.GRAY, dad.barColor);
 		songPosBar.scrollFactor.set();
 
 		songPosName = new FlxText(songPosBG.x + (songPosBG.width / 2) - (SONG.song.length * 5),songPosBG.y,0,SONG.song, 16);
 		if (PlayStateChangeables.useDownscroll) songPosName.y -= 3;
-		songPosName.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
+		songPosName.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
 		songPosName.scrollFactor.set();
 
 		healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(Paths.image('healthBar'));
@@ -1013,12 +1013,14 @@ class PlayState extends MusicBeatState
 		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this, 'health', 0, 2);
 		healthBar.scrollFactor.set();
 		if (!FlxG.save.data.colour) healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
+		else healthBar.createFilledBar(dad.barColor, boyfriend.barColor);
 
 		scoreTxt = new FlxText(FlxG.width / 2 - 235, (FlxG.save.data.healthBar ? healthBarBG.y + 40: healthBarBG.y), 0, "", 20);
 		scoreTxt.screenCenter(X);
 		scoreTxt.scrollFactor.set();
-		scoreTxt.setFormat(Paths.font("vcr.ttf"), (FlxG.save.data.healthBar ? 16: 18), FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		scoreTxt.text = Ratings.CalculateRanking(songScore, songScoreDef, nps, maxNPS, accuracy);
+		scoreTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		scoreTxt.text = Ratings.CalculateRanking(songScore, songScoreDef, accuracy);
+		scoreTxt.borderSize = 1.25;
 
 		iconP1 = new HealthIcon(SONG.player1, true);
 		iconP1.y = healthBar.y - (iconP1.height / 2);
@@ -1046,12 +1048,12 @@ class PlayState extends MusicBeatState
 		songText.scrollFactor.set();
 		if(FlxG.save.data.watermark) add(songText);
 
-		engineWatermark = new FlxText(FlxG.width - 200, healthBarBG.y + 50,0,"Engine Failure v" + MainMenuState.engineVersion, 16);
+		engineWatermark = new FlxText(FlxG.width - 200, healthBarBG.y + 50,0,"Fruit Punch Engine v" + MainMenuState.engineVersion, 16);
 		engineWatermark.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
 		engineWatermark.scrollFactor.set();
 		if(FlxG.save.data.watermark) add(engineWatermark);
 
-		if (FlxG.save.data.songPosition) // I dont wanna talk about this code :(
+		if (FlxG.save.data.songPosition)
 		{
 			add(songPosBG);
 			add(songPosBar);
@@ -1519,7 +1521,7 @@ class PlayState extends MusicBeatState
 			remove(songPosBar);
 			remove(songPosName);
 
-			songPosBG = new FlxSprite(0, 10).loadGraphic(Paths.image('healthBar'));
+			songPosBG = new FlxSprite(0, 12).loadGraphic(Paths.image('healthBar'));
 			if (PlayStateChangeables.useDownscroll)
 				songPosBG.y = FlxG.height * 0.9 + 45; 
 			songPosBG.screenCenter(X);
@@ -1536,7 +1538,7 @@ class PlayState extends MusicBeatState
 			songPosName = new FlxText(songPosBG.x + (songPosBG.width / 2) - (SONG.song.length * 5),songPosBG.y,0,SONG.song, 16);
 			if (PlayStateChangeables.useDownscroll)
 				songPosName.y -= 3;
-			songPosName.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
+			songPosName.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
 			songPosName.scrollFactor.set();
 			add(songPosName);
 
@@ -1930,8 +1932,6 @@ class PlayState extends MusicBeatState
 	private var paused:Bool = false;
 	var startedCountdown:Bool = false;
 	var canPause:Bool = true;
-	var nps:Int = 0;
-	var maxNPS:Int = 0;
 
 	public static var songRate = 1.5;
 
@@ -2027,15 +2027,13 @@ class PlayState extends MusicBeatState
 					balls = 0;
 				balls--;
 			}
-			nps = notesHitArray.length;
-			if (nps > maxNPS)
-				maxNPS = nps;
 		}
 
 		if (FlxG.keys.justPressed.NINE)
 			iconP1.swapOldIcon();
 
 		scoreTxt.screenCenter(X);
+		songPosName.screenCenter(X);
 
 		switch (curStage)
 		{
@@ -3592,7 +3590,7 @@ class PlayState extends MusicBeatState
 			accuracy = Math.max(0,totalNotesHit / totalPlayed * 100);
 			accuracyDefault = Math.max(0, totalNotesHitDefault / totalPlayed * 100);
 
-			scoreTxt.text = Ratings.CalculateRanking(songScore, songScoreDef, nps, maxNPS, accuracy);
+			scoreTxt.text = Ratings.CalculateRanking(songScore, songScoreDef, accuracy);
 		}
 
 

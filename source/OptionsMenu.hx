@@ -62,7 +62,6 @@ class OptionsMenu extends MusicBeatState
 			new WatermarkOption("Toggle the watermarks in certain places."),
 			new SongPositionOption("Toggle showing how far you are in the song."),
 			new SpaceOption(""),
-			new NPSDisplayOption("Display the amount of notes per second."),
 			new ComboBreakOption("Display the amount of combo breaks."),
 			new ScoreOption("Display score information."),
 			new AccuracyOption("Display accuracy information."),
