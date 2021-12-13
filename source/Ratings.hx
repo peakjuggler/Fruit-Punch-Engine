@@ -47,9 +47,9 @@ class Ratings
                 switch(i)
                 {
                     case 0:
-                        ranking += " S++";
+                        ranking += " SSS";
                     case 1:
-                        ranking += " S+";
+                        ranking += " SS";
                     case 2:
                         ranking += " S";
                     case 3:
@@ -79,7 +79,7 @@ class Ratings
                     case 15:
                         ranking += " D-";
                     case 16:
-                        ranking += " F";
+                        ranking += " E";
                 }
                 break;
             }
@@ -145,7 +145,7 @@ class Ratings
          (((FlxG.save.data.scoreDisplay || FlxG.save.data.missDisplay || FlxG.save.data.accuracyDisplay) && FlxG.save.data.npsDisplay) ? " | " : "") +
          (FlxG.save.data.scoreDisplay ? "Score:" + (Conductor.safeFrames != 10 ? score + " (" + scoreDef + ")" : " " + score + "") : "") +
          (((FlxG.save.data.missDisplay || FlxG.save.data.accuracyDisplay) && FlxG.save.data.scoreDisplay) ? " | " : "") +
-         (FlxG.save.data.missDisplay ? "Combo Breaks:" + PlayState.misses + "" : "") +
+         (FlxG.save.data.missDisplay ? "Misses:" + PlayState.misses + "" : "") +
          ((FlxG.save.data.accuracyDisplay && FlxG.save.data.missDisplay) ? " | " : "") +
          (FlxG.save.data.accuracyDisplay ? "Accuracy:" + (PlayStateChangeables.botPlay && !PlayState.loadRep ? "N/A" : HelperFunctions.truncateFloat(accuracy, 2) + "%") + " | " + GenerateLetterRank(accuracy) : "");
     }
