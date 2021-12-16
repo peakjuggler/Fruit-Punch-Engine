@@ -40,6 +40,11 @@ class FreeplayState extends MusicBeatState
 	private var curPlaying:Bool = false;
 
 	private var iconArray:Array<HealthIcon> = [];
+	public static var coolColors:Array<Int> = [];
+
+	var bg:FlxSprite;
+	var intendedColor:Int;
+	var colorTween:FlxTween;
 
 	override function create()
 	{
@@ -49,6 +54,12 @@ class FreeplayState extends MusicBeatState
 		{
 			var data:Array<String> = initSonglist[i].split(':');
 			songs.push(new SongMetadata(data[0], Std.parseInt(data[2]), data[1]));
+		}
+		// MY COLOR THING WORKS TK, RATIO LMAO
+		var colorsList = CoolUtil.coolTextFile(Paths.txt('freeplayColors'));
+		for (i in 0...colorsList.length)
+		{
+			coolColors.push(Std.parseInt(colorsList[i]));
 		}
 
 		/* 
@@ -74,7 +85,7 @@ class FreeplayState extends MusicBeatState
 
 		// LOAD CHARACTERS
 
-		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuBGBlue'));
+		bg = new FlxSprite().loadGraphic(Paths.image('menuBGBlue'));
 		add(bg);
 
 		grpSongs = new FlxTypedGroup<Alphabet>();
@@ -114,6 +125,8 @@ class FreeplayState extends MusicBeatState
 
 		add(scoreText);
 
+		bg.color = songs[curSelected].color;
+		intendedColor = bg.color;
 		changeSelection();
 		changeDiff();
 
@@ -231,6 +244,9 @@ class FreeplayState extends MusicBeatState
 
 		if (controls.BACK)
 		{
+			if(colorTween != null) {
+				colorTween.cancel();
+			}
 			FlxG.switchState(new MainMenuState());
 		}
 
@@ -254,6 +270,9 @@ class FreeplayState extends MusicBeatState
 			PlayState.storyDifficulty = curDifficulty;
 			PlayState.storyWeek = songs[curSelected].week;
 			trace('CUR WEEK' + PlayState.storyWeek);
+			if(colorTween != null) {
+				colorTween.cancel();
+			}
 
 			//all this code is from betadciu go sub to blantados
 			var theSongWordLength = FlxG.sound.play(Paths.sound('confirmMenu')).length;
@@ -318,6 +337,19 @@ class FreeplayState extends MusicBeatState
 		if (curSelected >= songs.length)
 			curSelected = 0;
 
+		var newColor:Int = songs[curSelected].color;
+		if(newColor != intendedColor) {
+			if(colorTween != null) {
+				colorTween.cancel();
+			}
+			intendedColor = newColor;
+			colorTween = FlxTween.color(bg, 1, bg.color, intendedColor, {
+				onComplete: function(twn:FlxTween) {
+					colorTween = null;
+				}
+			});
+		}
+
 		// selector.y = (70 * curSelected) + 30;
 		
 		// adjusting the highscore song name to be compatible (changeSelection)
@@ -378,11 +410,15 @@ class SongMetadata
 	public var songName:String = "";
 	public var week:Int = 0;
 	public var songCharacter:String = "";
+	public var color:Int = -7179779;
 
-	public function new(song:String, week:Int, songCharacter:String)
-	{
-		this.songName = song;
-		this.week = week;
-		this.songCharacter = songCharacter;
+		public function new(song:String, week:Int, songCharacter:String)
+		{
+			this.songName = song;
+			this.week = week;
+			this.songCharacter = songCharacter;
+			if(week < FreeplayState.coolColors.length) {
+				this.color = FreeplayState.coolColors[week];
+		}
 	}
 }
