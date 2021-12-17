@@ -11,6 +11,7 @@ import flixel.FlxG;
 import flixel.util.FlxTimer;
 import flixel.FlxSprite;
 import flixel.addons.display.FlxGridOverlay;
+import flixel.addons.display.FlxBackdrop;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxMath;
@@ -86,6 +87,8 @@ class OptionsMenu extends MusicBeatState
 	var currentSelectedCat:OptionCategory;
 	var blackBorder:FlxSprite;
 	var categoryText:FlxText;
+	var backdrop:FlxBackdrop = new FlxBackdrop(Paths.image('backdrop'), 0.2, 0.2, true, true);
+	var backdrop2:FlxBackdrop = new FlxBackdrop(Paths.image('backdrop'), 0.2, 0.2, true, true);
 
 	var optionTitle:FlxSprite;
 	var black:FlxSprite;
@@ -100,6 +103,16 @@ class OptionsMenu extends MusicBeatState
 		menuBG.screenCenter();
 		menuBG.antialiasing = true;
 		add(menuBG);
+
+		add(backdrop2);
+		backdrop.alpha = 0.5;
+		backdrop2.color = 0xFF00FFF2;
+		backdrop.scrollFactor.set(0, 0.07);
+
+		add(backdrop);
+		backdrop.alpha = 0.5;
+		backdrop.color = 0xFF00FFF2;
+		backdrop.scrollFactor.set(0, 0.07);
 
 		black = new FlxSprite(-1000).loadGraphic(Paths.image('blackFade'));
 		black.scrollFactor.x = 0;
@@ -135,7 +148,7 @@ class OptionsMenu extends MusicBeatState
 
 		currentDescription = "none";
 
-		categoryText = new FlxText(50, 640, 1180, "Please select a category.", 32);
+		categoryText = new FlxText(50, 640, 1180, "Select a category!", 32);
 		categoryText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		categoryText.scrollFactor.set();
 		categoryText.borderSize = 2.4;
@@ -160,6 +173,10 @@ class OptionsMenu extends MusicBeatState
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
+		backdrop.x -=100* elapsed;
+		backdrop.y -=60* elapsed;
+		backdrop2.x +=40* elapsed;
+		backdrop2.y +=30* elapsed;
 
 		if (acceptInput)
 		{
@@ -207,6 +224,7 @@ class OptionsMenu extends MusicBeatState
 				if (gamepad.justPressed.DPAD_DOWN)
 				{
 					FlxG.sound.play(Paths.sound('scrollMenu'));
+					trace("i'm a loon");
 					changeSelection(1);
 				}
 			}
@@ -337,7 +355,7 @@ class OptionsMenu extends MusicBeatState
 		if (isCat)
 			currentDescription = currentSelectedCat.getOptions()[curSelected].getDescription();
 		else
-			currentDescription = "Please select a category";
+			currentDescription = "Select a category!";
 		if (isCat)
 		{
 			if (currentSelectedCat.getOptions()[curSelected].getAccept())
