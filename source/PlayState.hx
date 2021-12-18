@@ -1290,9 +1290,6 @@ class PlayState extends MusicBeatState
 
 		startTimer = new FlxTimer().start(Conductor.crochet / 1000, function(tmr:FlxTimer)
 		{
-			dad.dance();
-			gf.dance();
-			boyfriend.playAnim('idle');
 
 			var introAssets:Map<String, Array<String>> = new Map<String, Array<String>>();
 			introAssets.set('default', ['ready', "set", "go"]);
@@ -1381,6 +1378,10 @@ class PlayState extends MusicBeatState
 				case 4:
 			}
 
+			dad.dance();
+			gf.dance();
+			boyfriend.playAnim('idle');
+			
 			swagCounter += 1;
 			// generateSong('fresh');
 		}, 5);
@@ -3381,11 +3382,18 @@ class PlayState extends MusicBeatState
 					}
 				});
 				
+				
 				if (boyfriend.holdTimer > Conductor.stepCrochet * 4 * 0.001 && (!holdArray.contains(true) || PlayStateChangeables.botPlay))
-				{
-					if (boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss'))
-						boyfriend.playAnim('idle');
-				}
+					{
+						if (boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss') && (boyfriend.animation.curAnim.curFrame >= 10 || boyfriend.animation.curAnim.finished))
+							boyfriend.playAnim('idle');
+					}
+					else if (!FlxG.save.data.ghost)
+					{
+						for (shit in 0...pressArray.length)
+							if (pressArray[shit])
+								noteMiss(shit, null);
+					}
 		 
 				playerStrums.forEach(function(spr:FlxSprite)
 				{
