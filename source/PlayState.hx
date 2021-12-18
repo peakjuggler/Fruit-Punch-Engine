@@ -2938,8 +2938,8 @@ class PlayState extends MusicBeatState
 					add(sploosh);
 					sploosh.cameras = [camHUD];
 					sploosh.animation.play('splash ' + FlxG.random.int(0, 1) + " " + daNote.noteData);
-					sploosh.offset.x += 90;
-					sploosh.offset.y += 80;
+					sploosh.offset.x += 100;
+					sploosh.offset.y += 120;
 					sploosh.alpha = 0.69;
 					sploosh.animation.finishCallback = function(name) sploosh.kill();
 				}
