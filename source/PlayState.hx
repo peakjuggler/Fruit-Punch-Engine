@@ -93,6 +93,7 @@ class PlayState extends MusicBeatState
 	public static var songPosBG:FlxSprite;
 	public static var songPosBar:FlxBar;
 	public static var songPosName:FlxText;
+	public static var songTimer:FlxText; //timer
 
 	public static var rep:Replay;
 	public static var loadRep:Bool = false;
@@ -105,7 +106,8 @@ class PlayState extends MusicBeatState
 
 	var songText:FlxText;
 	var engineWatermark:FlxText;
-	
+
+
 	#if windows
 	// Discord RPC variables
 	var storyDifficultyText:String = "";
@@ -1022,6 +1024,16 @@ class PlayState extends MusicBeatState
 		scoreTxt.text = Ratings.CalculateRanking(songScore, songScoreDef, accuracy);
 		scoreTxt.borderSize = 1.25;
 
+		songTimer = new FlxText(0, strumLine.y - 100, FlxG.width, "0:00", 20);
+		songTimer.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		songTimer.scrollFactor.set();
+		songTimer.borderSize = 1.25;
+		songTimer.screenCenter(X);
+		//daTime.x -= 10;
+		if (PlayStateChangeables.useDownscroll)
+			songTimer.y += 115;
+		songTimer.alpha = 0;
+
 		iconP1 = new HealthIcon(SONG.player1, true);
 		iconP1.y = healthBar.y - (iconP1.height / 2);
 
@@ -1058,6 +1070,7 @@ class PlayState extends MusicBeatState
 			add(songPosBG);
 			add(songPosBar);
 			add(songPosName);
+			add(songTimer);
 		}
 		if(FlxG.save.data.healthBar) 
 		{
@@ -1082,12 +1095,14 @@ class PlayState extends MusicBeatState
 		iconP2.cameras = [camHUD];
 		scoreTxt.cameras = [camHUD];
 		doof.cameras = [camHUD];
+		songTimer.cameras = [camHUD];
 		engineWatermark.cameras = [camHUD];
         songText.cameras = [camHUD];
 		if (FlxG.save.data.songPosition)
 		{
 			songPosBG.cameras = [camHUD];
 			songPosBar.cameras = [camHUD];
+			songTimer.cameras = [camHUD];
 		}
 		if (loadRep)
 			replayTxt.cameras = [camHUD];
@@ -1280,6 +1295,9 @@ class PlayState extends MusicBeatState
 			luaModchart.executeState('start',[songLowercase]);
 		}
 		#end
+
+		FlxTween.tween(songTimer, {alpha: 1}, 1, {ease: FlxEase.cubeInOut});
+		FlxTween.tween(songTimer, {y: songTimer.y + 80}, 1, {ease: FlxEase.backInOut});
 
 		talking = false;
 		startedCountdown = true;
@@ -1521,6 +1539,7 @@ class PlayState extends MusicBeatState
 			remove(songPosBG);
 			remove(songPosBar);
 			remove(songPosName);
+			remove(songTimer);
 
 			songPosBG = new FlxSprite(0, 12).loadGraphic(Paths.image('healthBar'));
 			if (PlayStateChangeables.useDownscroll)
@@ -1543,9 +1562,20 @@ class PlayState extends MusicBeatState
 			songPosName.scrollFactor.set();
 			add(songPosName);
 
+			songTimer = new FlxText(0, strumLine.y - 150, FlxG.width, "0:00", 20);
+			songTimer.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+			songTimer.scrollFactor.set();
+			songTimer.borderSize = 1.25;
+			songTimer.screenCenter(X);
+			//daTime.x -= 10;
+			if (PlayStateChangeables.useDownscroll)
+				songTimer.y += 200;
+			add(songTimer);
+
 			songPosBG.cameras = [camHUD];
 			songPosBar.cameras = [camHUD];
 			songPosName.cameras = [camHUD];
+			songTimer.cameras = [camHUD];
 		}
 		
 		// Song check real quick
@@ -2199,6 +2229,14 @@ class PlayState extends MusicBeatState
 					// Conductor.songPosition += FlxG.elapsed * 1000;
 					// trace('MISSED FRAME');
 				}
+				var curTime:Float = FlxG.sound.music.time;
+				if(curTime < 0) curTime = 0;
+				var secondsTotal:Int = Math.floor((songLength - curTime) / 1000);
+				if(secondsTotal < 0) secondsTotal = 0;
+				var minutesRemaining:Int = Math.floor(secondsTotal / 60);
+				var secondsRemaining:String = '' + secondsTotal % 60;
+				if(secondsRemaining.length < 2) secondsRemaining = '0' + secondsRemaining; 
+				songTimer.text = minutesRemaining + ':' + secondsRemaining; // i stole this from lexicord hey lexicord love you 
 			}
 
 			// Conductor.lastSongPos = FlxG.sound.music.time;
@@ -3898,6 +3936,8 @@ class PlayState extends MusicBeatState
 			luaModchart.executeState('beatHit',[curBeat]);
 		}
 		#end
+
+		
 
 		if (curSong == 'Tutorial' && dad.curCharacter == 'gf') {
 			if (curBeat % 2 == 1 && dad.animOffsets.exists('danceLeft'))

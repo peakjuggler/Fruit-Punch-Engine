@@ -61,7 +61,7 @@ class OptionsMenu extends MusicBeatState
 			new HealthBarOption("Toggle the health bar."),
 			new ScoreTextOption("Toggle the score text."),
 			new WatermarkOption("Toggle the watermarks in certain places."),
-			new SongPositionOption("Toggle showing how far you are in the song."),
+			new SongPositionOption("Toggle showing how far you are in the song and timer."),
 			new SpaceOption(""),
 			new ComboBreakOption("Display the amount of combo breaks."),
 			new ScoreOption("Display score information."),
