@@ -88,7 +88,6 @@ class OptionsMenu extends MusicBeatState
 	var blackBorder:FlxSprite;
 	var categoryText:FlxText;
 	var backdrop:FlxBackdrop = new FlxBackdrop(Paths.image('backdrop'), 0.2, 0.2, true, true);
-	var backdrop2:FlxBackdrop = new FlxBackdrop(Paths.image('backdrop'), 0.2, 0.2, true, true);
 
 	var optionTitle:FlxSprite;
 	var black:FlxSprite;
@@ -103,11 +102,6 @@ class OptionsMenu extends MusicBeatState
 		menuBG.screenCenter();
 		menuBG.antialiasing = true;
 		add(menuBG);
-
-		add(backdrop2);
-		backdrop.alpha = 0.5;
-		backdrop2.color = 0xFF00FFF2;
-		backdrop.scrollFactor.set(0, 0.07);
 
 		add(backdrop);
 		backdrop.alpha = 0.5;
@@ -175,8 +169,6 @@ class OptionsMenu extends MusicBeatState
 		super.update(elapsed);
 		backdrop.x -=100* elapsed;
 		backdrop.y -=60* elapsed;
-		backdrop2.x +=40* elapsed;
-		backdrop2.y +=30* elapsed;
 
 		if (acceptInput)
 		{
