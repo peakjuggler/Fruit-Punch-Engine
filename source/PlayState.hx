@@ -3075,12 +3075,10 @@ class PlayState extends MusicBeatState
 			timeShown = 0;
 			switch(daRating)
 			{
-				case 'shit' | 'bad':
+				case 'shit', 'bad':
 					currentTimingShown.color = FlxColor.RED;
-				case 'good':
-					currentTimingShown.color = FlxColor.GREEN;
-				case 'sick':
-					currentTimingShown.color = FlxColor.CYAN;
+				case 'good', 'sick':
+					currentTimingShown.color = FlxColor.WHITE;
 			}
 			currentTimingShown.borderStyle = OUTLINE;
 			currentTimingShown.borderSize = 1;
@@ -3116,14 +3114,15 @@ class PlayState extends MusicBeatState
 			
 			var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'combo' + pixelShitPart2));
 			comboSpr.screenCenter();
-			comboSpr.x = rating.x;
-			comboSpr.y = rating.y + 100;
+			comboSpr.setGraphicSize(Std.int(comboSpr.width / 2.9));
+			comboSpr.x = rating.x + 75;
+			comboSpr.y = rating.y + 85;
 			comboSpr.acceleration.y = 600;
 			comboSpr.velocity.y -= 150;
 
 			currentTimingShown.screenCenter();
 			currentTimingShown.x = comboSpr.x + 100;
-			currentTimingShown.y = rating.y + 100;
+			currentTimingShown.y = rating.y + 150;
 			currentTimingShown.acceleration.y = 600;
 			currentTimingShown.velocity.y -= 150;
 	
@@ -3156,13 +3155,23 @@ class PlayState extends MusicBeatState
 	
 			var comboSplit:Array<String> = (combo + "").split('');
 
-			if (comboSplit.length == 1 || comboSplit.length == 2 || comboSplit.length == 3 || comboSplit.length == 4)
+			if (combo > highestCombo)
+				highestCombo = combo;
 
-				for(i in 0...comboSplit.length)
-				{
-					var str:String = comboSplit[i];
-					seperatedScore.push(Std.parseInt(str));
-				}
+			// make sure we have 3 digits to display (looks weird otherwise lol)
+			if (comboSplit.length == 1)
+			{
+				seperatedScore.push(0);
+				seperatedScore.push(0);
+			}
+			else if (comboSplit.length == 2)
+				seperatedScore.push(0);
+
+			for(i in 0...comboSplit.length)
+			{
+				var str:String = comboSplit[i];
+				seperatedScore.push(Std.parseInt(str));
+			}
 
 			// make sure we have 3 digits to display (looks weird otherwise lol)
 	
@@ -3191,7 +3200,9 @@ class PlayState extends MusicBeatState
 				numScore.velocity.x = FlxG.random.float(-5, 5);
 	
 				add(numScore);
-	
+				if(combo > 5){ // itg combo shit
+				add(comboSpr);
+				}
 				FlxTween.tween(numScore, {alpha: 0}, 0.2, {
 					onComplete: function(tween:FlxTween)
 					{
