@@ -10,14 +10,14 @@ class DiscordClient
 {
 	public function new()
 	{
-		trace("Discord Client starting...");
+		trace("Fruit Punch Discord Flavor is Mixing...");
 		DiscordRpc.start({
-			clientID: "922930248130121909", // change this to what ever the fuck you want lol
+			clientID: "932842439809568798", // change this to what ever the fuck you want lol
 			onReady: onReady,
 			onError: onError,
 			onDisconnected: onDisconnected
 		});
-		trace("Discord Client started.");
+		trace("Fruit Punch Discord Flavor has been Mixed!");
 
 		while (true)
 		{
@@ -37,21 +37,21 @@ class DiscordClient
 	static function onReady()
 	{
 		DiscordRpc.presence({
-			details: "In the Menus",
+			details: "MAIN MENU",
 			state: null,
-			largeImageKey: 'icon',
-			largeImageText: "fridaynightfunkin"
+			largeImageKey: 'fruitpunchlogo',
+			largeImageText: "frootpunch"
 		});
 	}
 
 	static function onError(_code:Int, _message:String)
 	{
-		trace('Error! $_code : $_message');
+		trace('you fucked something up! $_code : $_message');
 	}
 
 	static function onDisconnected(_code:Int, _message:String)
 	{
-		trace('Disconnected! $_code : $_message');
+		trace('lmao connect to the internet! $_code : $_message');
 	}
 
 	public static function initialize()
@@ -60,7 +60,7 @@ class DiscordClient
 		{
 			new DiscordClient();
 		});
-		trace("Discord Client initialized Fruit Punch Is Ready");
+		trace("Fruit Punch has been Mixed");
 	}
 
 	public static function changePresence(details:String, state:Null<String>, ?smallImageKey : String, ?hasStartTimestamp : Bool, ?endTimestamp: Float)
@@ -71,12 +71,13 @@ class DiscordClient
 		{
 			endTimestamp = startTimestamp + endTimestamp;
 		}
-	//booty me down pls -Breezys IRL friend
+	//booty me down pls -Breezys IRL friend 
+	// hi breezys friend
 		DiscordRpc.presence({
 			details: details,
 			state: state,
-			largeImageKey: 'icon',
-			largeImageText: "fridaynightfunkin",
+			largeImageKey: 'fruitpunchlogo',
+			largeImageText: "frootpunch",
 			smallImageKey : smallImageKey,
 			// Obtained times are in milliseconds so they are divided so Discord can use it
 			startTimestamp : Std.int(startTimestamp / 1000),
