@@ -266,6 +266,11 @@ class PlayState extends MusicBeatState
 		repPresses = 0;
 		repReleases = 0;
 
+		// preload note splash
+		var sploosh:FlxSprite = new FlxSprite(0,0);
+		sploosh.frames = Paths.getSparrowAtlas('noteSplashes');
+		sploosh.animation.addByPrefix('splosh 0 0', 'Left Note Splash', 24, false);
+		sploosh.animation.play('splosh 0 0');
 
 		PlayStateChangeables.useDownscroll = FlxG.save.data.downscroll;
 		PlayStateChangeables.safeFrames = FlxG.save.data.frames;
@@ -322,7 +327,7 @@ class PlayState extends MusicBeatState
 		}
 
 		// String for when the game is paused
-		detailsPausedText = "Paused - " + detailsText;
+		detailsPausedText = "Vibing to the Pause Menu Music on -" + detailsText;
 
 		// Updating Discord Rich Presence.
 		DiscordClient.changePresence(detailsText + " " + SONG.song + " (" + storyDifficultyText + ") " + Ratings.GenerateLetterRank(accuracy), "\nAcc: " + HelperFunctions.truncateFloat(accuracy, 2) + "% | Score: " + songScore + " | Misses: " + misses  , iconRPC);
@@ -2103,8 +2108,7 @@ class PlayState extends MusicBeatState
 			}
 			else
 				openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
-		}
-
+		}		
 
 		if (FlxG.keys.justPressed.SEVEN)
 		{
@@ -2977,7 +2981,8 @@ class PlayState extends MusicBeatState
 					add(sploosh);
 					sploosh.cameras = [camHUD];
 					sploosh.animation.play('splash ' + FlxG.random.int(0, 1) + " " + daNote.noteData);
-					sploosh.offset.x += 100;
+					sploosh.setGraphicSize(Std.int(sploosh.width / 1.3));
+					sploosh.offset.x += 120;
 					sploosh.offset.y += 120;
 					sploosh.alpha = 0.69;
 					sploosh.animation.finishCallback = function(name) sploosh.kill();
@@ -3114,9 +3119,8 @@ class PlayState extends MusicBeatState
 			
 			var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'combo' + pixelShitPart2));
 			comboSpr.screenCenter();
-			comboSpr.setGraphicSize(Std.int(comboSpr.width / 2.9));
-			comboSpr.x = rating.x + 75;
-			comboSpr.y = rating.y + 85;
+			comboSpr.x = rating.x + 45;
+			comboSpr.y = rating.y + 75;
 			comboSpr.acceleration.y = 600;
 			comboSpr.velocity.y -= 150;
 
@@ -3162,7 +3166,7 @@ class PlayState extends MusicBeatState
 			if (comboSplit.length == 1)
 			{
 				seperatedScore.push(0);
-				seperatedScore.push(0);
+				seperatedScore.push(0); // adding this back for now, might change it to work with the new combo shit later
 			}
 			else if (comboSplit.length == 2)
 				seperatedScore.push(0);
@@ -3173,7 +3177,6 @@ class PlayState extends MusicBeatState
 				seperatedScore.push(Std.parseInt(str));
 			}
 
-			// make sure we have 3 digits to display (looks weird otherwise lol)
 	
 			var daLoop:Int = 0;
 			for (i in seperatedScore)
@@ -3200,9 +3203,19 @@ class PlayState extends MusicBeatState
 				numScore.velocity.x = FlxG.random.float(-5, 5);
 	
 				add(numScore);
-				if(combo > 5){ // itg combo shit
+				if(combo > 4 && !curStage.startsWith('school')) // two if statements because it works
+				{ // itg combo shit
+				comboSpr.setGraphicSize(Std.int(comboSpr.width / 1.3));
 				add(comboSpr);
 				}
+				if(combo > 4 && curStage.startsWith('school'))
+				{
+					comboSpr.x = rating.x + 85;
+					comboSpr.y = rating.y + 95;
+					add(comboSpr);
+				}
+				
+
 				FlxTween.tween(numScore, {alpha: 0}, 0.2, {
 					onComplete: function(tween:FlxTween)
 					{
