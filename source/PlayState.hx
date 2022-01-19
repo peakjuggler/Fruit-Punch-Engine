@@ -1023,10 +1023,9 @@ class PlayState extends MusicBeatState
 		if (!FlxG.save.data.colour) healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
 		else healthBar.createFilledBar(dad.barColor, boyfriend.barColor);
 
-		scoreTxt = new FlxText(FlxG.width / 2 - 235, (FlxG.save.data.healthBar ? healthBarBG.y + 40: healthBarBG.y), 0, "", 20);
-		scoreTxt.screenCenter(X);
+		scoreTxt = new FlxText(healthBarBG.x + healthBarBG.width - 190, healthBarBG.y + 30, 0, "", 20);
 		scoreTxt.scrollFactor.set();
-		scoreTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, FlxTextAlign.RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		scoreTxt.text = Ratings.CalculateRanking(songScore, songScoreDef, accuracy);
 		scoreTxt.borderSize = 1.25;
 
@@ -1063,12 +1062,12 @@ class PlayState extends MusicBeatState
 		botplayTxt.alpha = 0.47;
 		if(PlayStateChangeables.botPlay && !loadRep) add(botplayTxt);
 
-		songText = new FlxText(4,healthBarBG.y + 50,0,SONG.song + " | " + CoolUtil.difficultyFromInt(storyDifficulty), 16);
+		songText = new FlxText(4,healthBarBG.y + 50,0,SONG.song + " / " + CoolUtil.difficultyFromInt(storyDifficulty), 16);
 		songText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
 		songText.scrollFactor.set();
 		if(FlxG.save.data.watermark) add(songText);
 
-		engineWatermark = new FlxText(FlxG.width - 200, healthBarBG.y + 50,0,"Fruit Punch Engine v" + MainMenuState.engineVersion, 16);
+		engineWatermark = new FlxText(FlxG.width - 230, healthBarBG.y + 50,0,"Fruit Punch Engine v" + MainMenuState.engineVersion, 16);
 		engineWatermark.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
 		engineWatermark.scrollFactor.set();
 		if(FlxG.save.data.watermark) add(engineWatermark);
@@ -1316,6 +1315,10 @@ class PlayState extends MusicBeatState
 		startTimer = new FlxTimer().start(Conductor.crochet / 1000, function(tmr:FlxTimer)
 		{
 
+			dad.dance();
+			gf.dance();
+			boyfriend.dance();
+
 			var introAssets:Map<String, Array<String>> = new Map<String, Array<String>>();
 			introAssets.set('default', ['ready', "set", "go"]);
 			introAssets.set('school', [
@@ -1402,10 +1405,6 @@ class PlayState extends MusicBeatState
 					FlxG.sound.play(Paths.sound('introGo' + altSuffix), 0.6);
 				case 4:
 			}
-
-			dad.dance();
-			gf.dance();
-			boyfriend.playAnim('idle');
 			
 			swagCounter += 1;
 			// generateSong('fresh');
@@ -2070,7 +2069,6 @@ class PlayState extends MusicBeatState
 		if (FlxG.keys.justPressed.NINE)
 			iconP1.swapOldIcon();
 
-		scoreTxt.screenCenter(X);
 		songPosName.screenCenter(X);
 
 		switch (curStage)
@@ -2515,6 +2513,7 @@ class PlayState extends MusicBeatState
 				unspawnNotes.splice(index, 1);
 			}
 		}
+
 
 		if (generatedMusic)
 			{
@@ -3996,13 +3995,14 @@ class PlayState extends MusicBeatState
 				Conductor.changeBPM(SONG.notes[Math.floor(curStep / 16)].bpm);
 				FlxG.log.add('CHANGED BPM!');
 			}
+		}
 			// else
 			// Conductor.changeBPM(SONG.bpm);
-
+			if(dad.animation.curAnim!=null)
+				if (!dad.animation.curAnim.name.startsWith("sing"))
+					dad.dance();
 			// Dad doesnt interupt his own notes
-			// if (SONG.notes[Math.floor(curStep / 16)].mustHitSection && dad.curCharacter != 'gf')
-			// 	dad.dance();
-		}
+		
 		// FlxG.log.add('change bpm' + SONG.notes[Std.int(curStep / 16)].changeBPM);
 		wiggleShit.update(Conductor.crochet);
 
@@ -4030,31 +4030,19 @@ class PlayState extends MusicBeatState
 		iconP2.updateHitbox();
 
 		if (curBeat % gfSpeed == 0)
-		{
-			gf.dance();
-		}
+			{
+				gf.dance();
+			}
+	
+		if(boyfriend.animation.curAnim!=null)
+			if (!boyfriend.animation.curAnim.name.startsWith("sing"))
+				boyfriend.dance();
 
-		if (!boyfriend.animation.curAnim.name.startsWith("sing"))
-		{
-			boyfriend.playAnim('idle');
-		}
-
-		if (!dad.animation.curAnim.name.startsWith("sing"))
-		{
-			dad.dance();
-		}
-		
 
 		if (curBeat % 8 == 7 && curSong == 'Bopeebo')
 		{
 			boyfriend.playAnim('hey', true);
 		}
-
-		if (curBeat % 16 == 15 && SONG.song == 'Tutorial' && dad.curCharacter == 'gf' && curBeat > 16 && curBeat < 48)
-			{
-				boyfriend.playAnim('hey', true);
-				dad.playAnim('cheer', true);
-			}
 
 		switch (curStage)
 		{
@@ -4081,22 +4069,36 @@ class PlayState extends MusicBeatState
 							fastCarDrive();
 				}
 			case "philly":
-				if(FlxG.save.data.distractions){
+			{
+				if(FlxG.save.data.distractions)
+				{
 					if (!trainMoving)
 						trainCooldown += 1;
 	
-					if (curBeat % 4 == 0)
+					if (curBeat % 4 == 0) // light code ripped from forever engine (btw i love you shubs)
 					{
+						var lastLight:FlxSprite = phillyCityLights.members[0];
+		
 						phillyCityLights.forEach(function(light:FlxSprite)
 						{
+							// Take note of the previous light
+							if (light.visible == true)
+								lastLight = light;
+
 							light.visible = false;
 						});
-	
-						curLight = FlxG.random.int(0, phillyCityLights.length - 1);
-	
+		
+						// To prevent duplicate lights, iterate until you get a matching light
+						while (lastLight == phillyCityLights.members[curLight])
+						{
+							curLight = FlxG.random.int(0, phillyCityLights.length - 1);
+						}
+		
 						phillyCityLights.members[curLight].visible = true;
-						// phillyCityLights.members[curLight].alpha = 1;
-				}
+						phillyCityLights.members[curLight].alpha = 1;
+		
+						FlxTween.tween(phillyCityLights.members[curLight], {alpha: 0}, Conductor.stepCrochet * .016);
+					}
 
 				}
 
@@ -4107,6 +4109,7 @@ class PlayState extends MusicBeatState
 						trainStart();
 					}
 				}
+			}
 		}
 
 		if (isHalloween && FlxG.random.bool(10) && curBeat > lightningStrikeBeat + lightningOffset)
