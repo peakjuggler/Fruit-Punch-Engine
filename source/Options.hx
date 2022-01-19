@@ -203,6 +203,27 @@ class NoteSplashes extends Option
 		}
 }
 
+class MSTiming extends Option
+{
+	public function new(desc:String)
+		{
+			super();
+			description = desc;
+		}
+	
+		public override function press():Bool
+		{
+			FlxG.save.data.msTiming = !FlxG.save.data.msTiming;
+			display = updateDisplay();
+			return true;
+		}
+	
+		private override function updateDisplay():String
+		{
+			return "msTiming " + (FlxG.save.data.msTiming ? "ON" : "OFF");
+		}
+}
+
 class AccuracyOption extends Option
 {
 	public function new(desc:String)

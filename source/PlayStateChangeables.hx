@@ -6,4 +6,5 @@ class PlayStateChangeables
     public static var botPlay:Bool;
     public static var optimizeGameplay:Bool;
     public static var noteSplashes:Bool;
+    public static var msTiming:Bool;
 }

@@ -66,6 +66,7 @@ class OptionsMenu extends MusicBeatState
 			new ComboBreakOption("Display the amount of combo breaks."),
 			new ScoreOption("Display score information."),
 			new AccuracyOption("Display accuracy information."),
+			new MSTiming("Show hit timing information."),
 		]),
 		new OptionCategory("Miscellaneous", [
 			#if desktop

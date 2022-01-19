@@ -278,6 +278,7 @@ class PlayState extends MusicBeatState
 		PlayStateChangeables.botPlay = FlxG.save.data.botplay;
 		PlayStateChangeables.optimizeGameplay = FlxG.save.data.optimize;
 		PlayStateChangeables.noteSplashes = FlxG.save.data.NoteSplashes;
+		PlayStateChangeables.msTiming = FlxG.save.data.msTiming;
 
 		// pre lowercasing the song name (create)
 		var songLowercase = StringTools.replace(PlayState.SONG.song, " ", "-").toLowerCase();
@@ -3116,8 +3117,13 @@ class PlayState extends MusicBeatState
 			if (currentTimingShown.alpha != 1)
 				currentTimingShown.alpha = 1;
 
-			if(!PlayStateChangeables.botPlay || loadRep) add(currentTimingShown);
-			
+			if(!PlayStateChangeables.botPlay || loadRep) 
+				
+			if (PlayStateChangeables.msTiming)
+				{
+					add(currentTimingShown);
+				}
+				
 			var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'combo' + pixelShitPart2));
 			comboSpr.screenCenter();
 			comboSpr.x = rating.x + 45;
