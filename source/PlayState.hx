@@ -1029,6 +1029,7 @@ class PlayState extends MusicBeatState
 		scoreTxt.text = Ratings.CalculateRanking(songScore, songScoreDef, accuracy);
 		scoreTxt.borderSize = 1.25;
 
+		
 		songTimer = new FlxText(0, strumLine.y - 100, FlxG.width, "0:00", 20);
 		songTimer.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		songTimer.scrollFactor.set();
@@ -1038,6 +1039,7 @@ class PlayState extends MusicBeatState
 		if (PlayStateChangeables.useDownscroll)
 			songTimer.y += 115;
 		songTimer.alpha = 0;
+		
 
 		iconP1 = new HealthIcon(SONG.player1, true);
 		iconP1.y = healthBar.y - (iconP1.height / 2);
@@ -1075,7 +1077,6 @@ class PlayState extends MusicBeatState
 			add(songPosBG);
 			add(songPosBar);
 			add(songPosName);
-			add(songTimer);
 		}
 		if(FlxG.save.data.healthBar) 
 		{
@@ -1100,14 +1101,14 @@ class PlayState extends MusicBeatState
 		iconP2.cameras = [camHUD];
 		scoreTxt.cameras = [camHUD];
 		doof.cameras = [camHUD];
-		songTimer.cameras = [camHUD];
+		// songTimer.cameras = [camHUD];
 		engineWatermark.cameras = [camHUD];
         songText.cameras = [camHUD];
 		if (FlxG.save.data.songPosition)
 		{
 			songPosBG.cameras = [camHUD];
 			songPosBar.cameras = [camHUD];
-			songTimer.cameras = [camHUD];
+			// songTimer.cameras = [camHUD];
 		}
 		if (loadRep)
 			replayTxt.cameras = [camHUD];
@@ -1300,10 +1301,10 @@ class PlayState extends MusicBeatState
 			luaModchart.executeState('start',[songLowercase]);
 		}
 		#end
-
+		/*
 		FlxTween.tween(songTimer, {alpha: 1}, 1, {ease: FlxEase.cubeInOut});
 		FlxTween.tween(songTimer, {y: songTimer.y + 80}, 1, {ease: FlxEase.backInOut});
-
+		*/
 		talking = false;
 		startedCountdown = true;
 		Conductor.songPosition = 0;
@@ -1544,7 +1545,7 @@ class PlayState extends MusicBeatState
 			remove(songPosBG);
 			remove(songPosBar);
 			remove(songPosName);
-			remove(songTimer);
+			// remove(songTimer);
 
 			songPosBG = new FlxSprite(0, 12).loadGraphic(Paths.image('healthBar'));
 			if (PlayStateChangeables.useDownscroll)
@@ -1575,7 +1576,7 @@ class PlayState extends MusicBeatState
 			//daTime.x -= 10;
 			if (PlayStateChangeables.useDownscroll)
 				songTimer.y += 200;
-			add(songTimer);
+			// add(songTimer);
 
 			songPosBG.cameras = [camHUD];
 			songPosBar.cameras = [camHUD];
@@ -1797,7 +1798,7 @@ class PlayState extends MusicBeatState
 						babyArrow.animation.addByPrefix('blue', 'arrowDOWN');
 						babyArrow.animation.addByPrefix('purple', 'arrowLEFT');
 						babyArrow.animation.addByPrefix('red', 'arrowRIGHT');
-		
+
 						babyArrow.antialiasing = true;
 						babyArrow.setGraphicSize(Std.int(babyArrow.width * 0.7));
 		
@@ -3120,9 +3121,11 @@ class PlayState extends MusicBeatState
 			var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'combo' + pixelShitPart2));
 			comboSpr.screenCenter();
 			comboSpr.x = rating.x + 45;
-			comboSpr.y = rating.y + 75;
-			comboSpr.acceleration.y = 600;
-			comboSpr.velocity.y -= 150;
+			comboSpr.y = rating.y + 100;
+
+			comboSpr.acceleration.y = FlxG.random.int(200, 300);
+			comboSpr.velocity.y -= FlxG.random.int(140, 160);
+			comboSpr.velocity.x = FlxG.random.float(-5, 5);
 
 			currentTimingShown.screenCenter();
 			currentTimingShown.x = comboSpr.x + 100;
@@ -3182,7 +3185,7 @@ class PlayState extends MusicBeatState
 			for (i in seperatedScore)
 			{
 				var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'num' + Std.int(i) + pixelShitPart2));
-				numScore.screenCenter();
+				numScore.screenCenter(XY);
 				numScore.x = rating.x + (43 * daLoop) - 50;
 				numScore.y = rating.y + 100;
 				numScore.cameras = [camHUD];
@@ -3219,11 +3222,22 @@ class PlayState extends MusicBeatState
 				FlxTween.tween(numScore, {alpha: 0}, 0.2, {
 					onComplete: function(tween:FlxTween)
 					{
-						numScore.destroy();
+						numScore.kill();
+					//	numScore.destroy();
 					},
-					startDelay: Conductor.crochet * 0.002
+					startDelay: Conductor.crochet * 0.001
+				});
+
+				numScore.y -= 30;
+				FlxTween.tween(numScore, {y: numScore.y + 30}, 0.2, { // stolen from andromeda, love you neb
+					ease: FlxEase.circOut
 				});
 	
+				numScore.y -= 30;
+				FlxTween.tween(comboSpr, {y: numScore.y + 30}, 0.2, { // stolen from andromeda, love you neb
+					ease: FlxEase.circOut
+				});
+
 				daLoop++;
 			}
 			/* 
@@ -3232,9 +3246,8 @@ class PlayState extends MusicBeatState
 			 */
 	
 			coolText.text = Std.string(seperatedScore);
-			// add(coolText);
-	
-			FlxTween.tween(rating, {alpha: 0}, 0.2, {
+
+			FlxTween.tween(rating.scale, {x:0.01, y:0.01}, 0.2, {
 				startDelay: Conductor.crochet * 0.001,
 				onUpdate: function(tween:FlxTween)
 				{
