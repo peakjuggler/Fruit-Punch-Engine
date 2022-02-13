@@ -48,18 +48,19 @@ class FreeplayState extends MusicBeatState
 
 	override function create()
 	{
+		// MY COLOR THING WORKS TK, RATIO LMAO
+		var colorsList = CoolUtil.coolTextFile(Paths.txt('freeplayColors'));
+		for (i in 0...colorsList.length)
+		{
+			coolColors.push(Std.parseInt(colorsList[i]));
+		}
+
 		var initSonglist = CoolUtil.coolTextFile(Paths.txt('freeplaySonglist'));
 
 		for (i in 0...initSonglist.length)
 		{
 			var data:Array<String> = initSonglist[i].split(':');
 			songs.push(new SongMetadata(data[0], Std.parseInt(data[2]), data[1]));
-		}
-		// MY COLOR THING WORKS TK, RATIO LMAO
-		var colorsList = CoolUtil.coolTextFile(Paths.txt('freeplayColors'));
-		for (i in 0...colorsList.length)
-		{
-			coolColors.push(Std.parseInt(colorsList[i]));
 		}
 
 		/* 
